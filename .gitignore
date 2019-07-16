@@ -1,0 +1,7 @@
+*.o
+*.bin
+*.trt
+*.onnx
+*.pth.tar
+*.pyc
+*.weight

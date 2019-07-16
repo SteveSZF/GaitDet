@@ -1,0 +1,52 @@
+#include <iostream>
+#include <string>
+#include <fstream>
+#include "deeplab.cuh"
+#include "Yolov3.h"
+using namespace std;
+const float anchors[18] = { 12,15,  18,32,  35,25,  32,63,  64,47,  61,121,  118,92,  158,200,  375,328};
+//const float anchors[18] = { 10,13,  16,30,  33,23,  30,61,  62,45,  59,119,  116,90,  156,198,  373,326};
+const int mask[3][3] = {
+    {6,7,8},
+    {3,4,5},
+    {0,1,2}
+};
+
+
+int main(int argc, char** argv)
+{
+    
+    if(argc < 3){
+        std::cerr << "more args needed" << std::endl;
+        return -1; 
+    }
+    
+    cv::VideoCapture reader(argv[1]);
+    cv::Mat img;
+    reader.read(img);
+    
+    DeepLab deeplab(img.cols, img.rows, argv[2]);
+
+    const float obj_thresh = 0.9, nms_thresh = 0.1; 
+    Yolov3 yolo(img.cols, img.rows, anchors, mask, obj_thresh, nms_thresh, argv[3]);
+
+    cv::namedWindow("Gait", cv::WINDOW_NORMAL);
+    cv::resizeWindow("Gait", deeplab.get_OUTPUT_W(), deeplab.get_OUTPUT_H());
+
+    vector<box> box_list, box_result;
+    cv::TickMeter tm, tp;
+    while(1){
+        tm.reset(); tm.start();
+	    reader.read(img);
+        
+        yolo.doInference(img, box_list, box_result);
+	    deeplab.doInference(img);
+        yolo.make_output(deeplab.real_out, box_result);
+	    
+	    cv::imshow("Gait", deeplab.real_out);
+        cv::waitKey(1);
+        tm.stop();
+        std::cout << "time for per frame: " << tm.getTimeMilli() << std::endl; 
+    }
+    return 0;
+}
