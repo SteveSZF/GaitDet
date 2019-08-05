@@ -1,5 +1,3 @@
-OUTNAME=lidar_seg_int8
-
 CC = g++
 CUCC =$(CUDA_INSTALL_DIR)/bin/nvcc -m64
 
