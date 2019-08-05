@@ -1,8 +1,9 @@
 CC = g++
+CUDA_INSTALL_DIR=/usr/local/cuda
 CUCC =$(CUDA_INSTALL_DIR)/bin/nvcc -m64
 
 TENSORRT_DIR=/home/szf/TensorRT-5.0.2.6
-CUDA_INSTALL_DIR=/usr/local/cuda
+
 CUDA_LIBDIR=lib64
 
 LIBPATHS=-L/usr/local/lib -L"$(CUDA_INSTALL_DIR)/$(CUDA_LIBDIR)" -L"$(TENSORRT_DIR)/lib"
