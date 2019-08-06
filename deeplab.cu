@@ -74,7 +74,7 @@ DeepLab::DeepLab(const int img_w, const int img_h, const char *trt_file, const i
     threads = dim3(threads_per_block, threads_per_block);
 
     //set the size of the outputed segmentation image 
-    real_out.create(OUTPUT_W, OUTPUT_H, CV_8UC3);
+    real_out.create(OUTPUT_H, OUTPUT_W, CV_8UC3);
 
     CHECK(cudaMalloc(&buffers[0], input_size ));
     CHECK(cudaMalloc(&buffers[1], output_size ));
